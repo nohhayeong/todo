@@ -1,5 +1,6 @@
 package com.teamsparta.todolist.domain.card.controller
 
+import com.teamsparta.todolist.domain.card.dto.CardNCommentsResponse
 import com.teamsparta.todolist.domain.card.dto.CardResponse
 import com.teamsparta.todolist.domain.card.dto.CreateCardRequest
 import com.teamsparta.todolist.domain.card.dto.UpdateCardRequest
@@ -27,7 +28,8 @@ class CardController(
     }
 
     @GetMapping("/{cardId}")
-    fun getCard(@PathVariable cardId: Long): ResponseEntity<CardResponse> {
+    fun getCard(@PathVariable cardId: Long): ResponseEntity<CardNCommentsResponse> {
+        //Comment 목록까지 같이 응답?
         return ResponseEntity.status(HttpStatus.OK).body(cardService.getCard(cardId))
     }
 

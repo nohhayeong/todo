@@ -14,8 +14,8 @@ class SwaggerConfig {
         .components(Components())
         .info(
             Info()
-                .title("Card API")
-                .description("Card API schema")
+                .title("ToDo API")
+                .description("ToDo API schema")
                 .version("1.0.0")
         )
 }
