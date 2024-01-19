@@ -1,6 +1,8 @@
 package com.teamsparta.todolist.domain.comment.model
 
+import com.teamsparta.todolist.domain.card.dto.CardResponse
 import com.teamsparta.todolist.domain.card.model.Card
+import com.teamsparta.todolist.domain.comment.dto.CommentResponse
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
 import java.time.LocalDateTime
@@ -24,4 +26,12 @@ class Comment (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
+}
+
+fun Comment.toResponse():CommentResponse{
+    return CommentResponse(
+        id=id!!,
+        name=name,
+        content = content
+    )
 }
