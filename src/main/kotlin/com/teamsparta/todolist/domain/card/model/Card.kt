@@ -31,6 +31,14 @@ class Card (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
+
+    fun addComment(comment:Comment) {
+        comments.add(comment)
+    }
+
+    fun removeComment(comment:Comment) {
+        comments.remove(comment)
+    }
 }
 
 fun Card.toResponse(): CardResponse{

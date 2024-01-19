@@ -10,6 +10,7 @@ import com.teamsparta.todolist.domain.card.repository.CardRepository
 import com.teamsparta.todolist.domain.comment.dto.CommentResponse
 import com.teamsparta.todolist.domain.comment.dto.CreateCommentRequest
 import com.teamsparta.todolist.domain.comment.dto.UpdateCommentRequest
+import com.teamsparta.todolist.domain.comment.model.Comment
 import com.teamsparta.todolist.domain.comment.model.toResponse
 import com.teamsparta.todolist.domain.comment.repository.CommentRepository
 import com.teamsparta.todolist.domain.exception.ModelNotFoundException
@@ -60,15 +61,37 @@ class CardService (
     }
 
     //comments
-    fun createComment(cardId: Long, createCommentRequest: CreateCommentRequest): CommentResponse {
-        TODO()
+    fun createComment(cardId: Long, request: CreateCommentRequest): CommentResponse {
+        val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException("Card", cardId)
+
+        val comment = Comment(
+            card = card,
+            name = request.name,
+            content = request.content,
+            password = request.password
+        )
+
+        card.addComment(comment)
+        cardRepository.save(card)
+        return comment.toResponse()
     }
 
-    fun updateComment(cardId: Long, commentId: Long, updateCommentRequest: UpdateCommentRequest): CommentResponse {
-        TODO()
+    fun updateComment(cardId: Long, commentId: Long, request: UpdateCommentRequest): CommentResponse {
+        val comment = commentRepository.findByCardIdAndId(cardId, commentId)
+            ?: throw ModelNotFoundException("Comment", commentId)
+
+        comment.name = request.name
+        comment.content = request.content
+
+        return commentRepository.save(comment).toResponse()
     }
 
     fun deleteComment(cardId: Long, commentId: Long) {
-        TODO()
+        val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException("Card", cardId)
+        val comment = commentRepository.findByIdOrNull(commentId)
+            ?: throw ModelNotFoundException("Comment", commentId)
+
+        card.removeComment(comment)
+        cardRepository.save(card)
     }
 }
