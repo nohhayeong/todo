@@ -21,12 +21,12 @@ class CardService (
     private val cardRepository: CardRepository,
     private val commentRepository: CommentRepository
 ){
-    fun createCard(createCardRequest: CreateCardRequest): CardResponse {
+    fun createCard(request: CreateCardRequest): CardResponse {
         return cardRepository.save(
             Card(
-                name = createCardRequest.name,
-                title = createCardRequest.title,
-                content = createCardRequest.content
+                name = request.name,
+                title = request.title,
+                content = request.content
             )
         ).toResponse()
     }
@@ -35,20 +35,28 @@ class CardService (
         val card = cardRepository.findByIdOrNull(cardId)?: throw ModelNotFoundException("Card", cardId)
         return CardNCommentsResponse(
             card = card.toResponse(),
-            comments = commentRepository.findAll().map { it.toResponse() }
+            comments = card.comments.map { it.toResponse() }
         )
     }
 
     fun getCardList(): List<CardResponse> {
-        TODO()
+        return cardRepository.findAll().map { it.toResponse() }
     }
 
-    fun updateCard(cardId: Long, updateCardRequest: UpdateCardRequest): CardResponse {
-        TODO()
+    fun updateCard(cardId: Long, request: UpdateCardRequest): CardResponse {
+        val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException("Card", cardId)
+
+        card.title = request.title
+        card.content = request.content
+        card.name = request.name
+        card.isDone = request.isDone
+
+        return cardRepository.save(card).toResponse()
     }
 
     fun deleteCard(cardId: Long) {
-        TODO()
+        val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException("Card", cardId)
+        cardRepository.delete(card)
     }
 
     //comments
